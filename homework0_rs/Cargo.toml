@@ -1,0 +1,45 @@
+[package]
+name = "homework0_rs"
+version = "0.1.0"
+edition = "2024"
+
+# 标准发布配置
+[profile.release]
+
+
+# 最小体积配置
+[profile.min-size]
+inherits = "release"
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+
+# 使用nightly工具链的最小体积配置（需要nightly Rust）
+[profile.min-size-nightly]
+inherits = "min-size"
+# 使用panic_immediate_abort特性进一步减小体积
+# 需要设置：RUSTFLAGS="-C panic=abort" cargo +nightly build -Z build-std=std,panic_abort --profile min-size-nightly
+
+# 进一步减小体积的优化
+[profile.release.package."*"]
+opt-level = "z"
+
+[profile.min-size.package."*"]
+opt-level = "z"
+
+[profile.min-size-nightly.package."*"]
+opt-level = "z"
+
+# 禁用标准库调试信息
+[profile.release.build-override]
+opt-level = 3
+
+[profile.min-size.build-override]
+opt-level = 3
+
+[profile.min-size-nightly.build-override]
+opt-level = 3
+
+[dependencies]
